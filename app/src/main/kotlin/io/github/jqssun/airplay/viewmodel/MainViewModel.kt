@@ -92,6 +92,9 @@ class MainViewModel @Inject constructor(app: Application) : AndroidViewModel(app
     private val _serverState = MutableStateFlow(ServerState.STOPPED)
     val serverState: StateFlow<ServerState> = _serverState.asStateFlow()
 
+    private val _connectionNotice = MutableStateFlow("")
+    val connectionNotice = _connectionNotice.asStateFlow()
+
     private val _connectionCount = MutableStateFlow(0)
     val connectionCount: StateFlow<Int> = _connectionCount.asStateFlow()
 
@@ -161,6 +164,14 @@ class MainViewModel @Inject constructor(app: Application) : AndroidViewModel(app
 
     private val _overscanned = MutableStateFlow(prefs.getBoolean(Prefs.OVERSCANNED, Prefs.DEF_OVERSCANNED))
     val overscanned: StateFlow<Boolean> = _overscanned.asStateFlow()
+
+    private val _settingsRequest = MutableStateFlow(false)
+    val settingsRequest = _settingsRequest.asStateFlow()
+    fun requestSettings() { _settingsRequest.value = true }
+    fun clearSettingsRequest() { _settingsRequest.value = false }
+    private val _saveDownloads = MutableStateFlow(prefs.getBoolean(Prefs.SAVE_DOWNLOADS, false))
+    val saveDownloads = _saveDownloads.asStateFlow()
+    fun setSaveDownloads(v: Boolean) { _saveDownloads.value = v; prefs.edit().putBoolean(Prefs.SAVE_DOWNLOADS, v).apply() }
 
     private val _requirePin = MutableStateFlow(prefs.getBoolean(Prefs.REQUIRE_PIN, Prefs.DEF_REQUIRE_PIN))
     val requirePin: StateFlow<Boolean> = _requirePin.asStateFlow()
@@ -550,6 +561,7 @@ class MainViewModel @Inject constructor(app: Application) : AndroidViewModel(app
     fun updateFromService() {
         service?.let {
             _serverState.value = it.serverState.value
+            _connectionNotice.value = it.connectionNotice.value
             _connectionCount.value = it.connectionCount.value
             _videoAspect.value = it.videoAspect.value
             _videoResolution.value = it.videoResolution.value

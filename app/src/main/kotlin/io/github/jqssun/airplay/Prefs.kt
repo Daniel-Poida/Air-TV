@@ -7,11 +7,11 @@ object Prefs {
     const val NAME = "settings"
     const val AUTO = "auto"; const val ON = "on"; const val OFF = "off"
 
-    const val SERVER_NAME = "server_name"; const val DEF_SERVER_NAME = "Android AirPlay"
+    const val SERVER_NAME = "server_name"; const val DEF_SERVER_NAME = "Air TV"
     const val FALLBACK_MAC_ADDRESS = "fallback_mac_address"
     const val SERVER_PORT = "server_port"; const val DEF_SERVER_PORT = 7000
     const val AUTO_START = "auto_start"; const val DEF_AUTO_START = true
-    const val BOOT_AUTO_START = "boot_auto_start"; const val DEF_BOOT_AUTO_START = true
+    const val BOOT_AUTO_START = "boot_auto_start"; const val DEF_BOOT_AUTO_START = false
     const val RUN_IN_BACKGROUND = "run_in_background"; const val DEF_RUN_IN_BACKGROUND = true
     const val H265_ENABLED = "h265_enabled"; const val DEF_H265_ENABLED = true
     const val ENFORCE_SDR = "enforce_sdr"; const val DEF_ENFORCE_SDR = true
@@ -34,7 +34,8 @@ object Prefs {
     const val RESOLUTION = "resolution"; const val DEF_RESOLUTION = AUTO
     const val MAX_FPS = "max_fps"; const val DEF_MAX_FPS = 60
     const val OVERSCANNED = "overscanned"; const val DEF_OVERSCANNED = false
-    const val REQUIRE_PIN = "require_pin"; const val DEF_REQUIRE_PIN = false
+    const val SAVE_DOWNLOADS = "save_downloads"
+    const val REQUIRE_PIN = "require_pin"; const val DEF_REQUIRE_PIN = true
     const val ALLOW_NEW_CONN = "allow_new_conn"; const val DEF_ALLOW_NEW_CONN = true
     const val AUDIO_LATENCY_MS = "audio_latency_ms"; const val DEF_AUDIO_LATENCY_MS = -1
     const val DEBUG_ENABLED = "debug_enabled"; const val DEF_DEBUG_ENABLED = false

@@ -1,28 +1,24 @@
 package io.github.jqssun.airplay.ui.theme
 
-import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
+
+private val AirTvColors = darkColorScheme(
+    primary = Color(0xFFAEEDCE), onPrimary = Color(0xFF10271D),
+    background = Color(0xFF0C1012), onBackground = Color(0xFFF1F4F3),
+    surface = Color(0xFF161C1F), onSurface = Color(0xFFF1F4F3),
+    surfaceVariant = Color(0xFF20282C), onSurfaceVariant = Color(0xFF9BA8AD),
+    outline = Color(0xFF3B484E), error = Color(0xFFFFB4AB)
+)
 
 @Composable
-fun AirPlayTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
-) {
-    val colorScheme = when {
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val ctx = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(ctx) else dynamicLightColorScheme(ctx)
+fun AirPlayTheme(content: @Composable () -> Unit) {
+    MaterialTheme(colorScheme = AirTvColors) {
+        Surface(color = AirTvColors.background, contentColor = AirTvColors.onBackground) {
+            content()
         }
-        darkTheme -> darkColorScheme()
-        else -> lightColorScheme()
     }
-
-    MaterialTheme(colorScheme = colorScheme, content = content)
 }

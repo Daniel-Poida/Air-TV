@@ -1,0 +1,7 @@
+<resources>
+    <string name="notification_channel">AirPlay-приёмник</string>
+    <string name="notification_title">Air TV — приём включён</string>
+    <string name="notification_text">Готов к подключению по AirPlay</string>
+    <string name="notification_pin_title">Введите PIN на Mac</string>
+    <string name="notification_pin_text">PIN: %1$s</string>
+</resources>

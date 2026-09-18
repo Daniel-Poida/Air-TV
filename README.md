@@ -1,70 +1,132 @@
-# AirPlay Receiver for Android
+# Air TV — минималистичный AirPlay-приёмник для Android TV
 
-[![Stars](https://img.shields.io/github/stars/jqssun/android-airplay-server)](https://github.com/jqssun/android-airplay-server)
-[![GitHub](https://img.shields.io/github/downloads/jqssun/android-airplay-server/total?label=GitHub&logo=GitHub)](https://github.com/jqssun/android-airplay-server/releases)
-[![license](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://github.com/jqssun/android-airplay-server/blob/main/LICENSE)
-[![build](https://img.shields.io/github/actions/workflow/status/jqssun/android-airplay-server/apk.yml?label=build)](https://github.com/jqssun/android-airplay-server/actions/workflows/apk.yml)
-[![release](https://img.shields.io/github/v/release/jqssun/android-airplay-server)](https://github.com/jqssun/android-airplay-server/releases)
+Прототип 0.1.4 для Android TV 7.0+ (API 24), в том числе Mi TV Q1 и аналогичных телевизоров.
 
-A fully featured free and open-source implementation of AirPlay for Android that turns your device into an AirPlay-compatible display and speaker, based on [UxPlay](https://github.com/FDH2/UxPlay). It is the first open-source AirPlay 2 receiver for Android and Android TV, and works with iOS/iPadOS, macOS devices as well as other sender implementations.
+## Использование
 
-[<img height="48" alt="Get it on Google Play" src="https://jqssun.github.io/images/badges/google-play-store.svg">](https://play.google.com/store/apps/details?id=io.github.jqssun.airplay)
-[<img height="48" alt="Get it on F-Droid" src="https://jqssun.github.io/images/badges/fdroid.svg">](https://f-droid.org/packages/io.github.jqssun.airplay)
-[<img height="48" alt="Get it on GitHub" src="https://jqssun.github.io/images/badges/github.svg">](https://github.com/jqssun/android-airplay-server/releases/latest)
+1. Установите `AirTV-0.1.4-preview.apk` на телевизор и откройте **Air TV**.
+2. Подключите Mac и телевизор к одной локальной сети. Телевизор может быть подключён по Ethernet, Mac — по Wi-Fi. В роутере не должна быть включена изоляция клиентов.
+3. **Повтор экрана:** на Mac откройте «Пункт управления → Повтор экрана» и выберите **Air TV**.
+4. **Видео из плеера:** в приложении на Mac, поддерживающем AirPlay, нажмите значок AirPlay и выберите **Air TV**. Если плеер не поддерживает отправку видео по AirPlay, используйте повтор экрана.
+5. Введите на Mac PIN, показанный на телевизоре. Его можно отключить в настройках.
 
-<video loop src='https://github.com/user-attachments/assets/79ed7c0c-0102-43cc-8816-4f00ce6a4199' alt="demo" width="200" style="display: block; margin: auto;"></video>
+Для локального видео через повтор экрана отдельный клиент на Mac не нужен. Прямая передача файла зависит от поддержки AirPlay самим плеером; это приложение не добавляет кнопку AirPlay в любой Mac-плеер.
 
-## Compatibility
+Пульт: стрелки переключают элементы, OK активирует кнопку; во время воспроизведения видео OK показывает управление/ставит на паузу, влево/вправо перематывают, «Назад» останавливает видео. В режиме повтора экрана «Назад» открывает главный экран; остановите сам повтор на Mac.
 
-- Android 7.0+, including Android TV
-- AirPlay devices on the same subnet, including iOS/iPadOS, macOS devices, or other sender implementations
+## AirDrop: файлы через браузер
 
-## Features
+Откройте **Air TV → AirDrop** на телевизоре. Отсканируйте QR камерой телефона или откройте адрес `http://IP-телевизора:8786/` в браузере Mac. На телевизоре .31 это `http://192.168.0.31:8786/`. Адрес, порт и QR видны на экране AirDrop; QR содержит только адрес, без PIN.
 
-- Screen mirroring with H.264 and H.265 (HEVC) video decoding
-- Audio streaming with AAC-ELD, AAC-LC and ALAC audio decoding
-- Video playback with support for HLS, downloads, and remote controls
-- Music playback with track information, cover art, and remote controls
-- Support for Android TV with directional pad navigation and seeking controls
-- Support for Picture-in-Picture, automatic resolution and mode switching
-- Optional PIN authentication
-- Video resolution, overscan, and frame rate control
-- Audio latency control and support for software decoder fallback
-- Debug overlay with real-time statistics (FPS, bitrate, codec, resolution, frame count, audio volume, etc.)
-- Android native media session integration with notification controls
+Выберите или перетащите файлы, при включённом PIN введите четырёхзначный код с экрана AirDrop, нажмите «Отправить на телевизор» и подтвердите приём пультом. При включённой работе в фоне и автоматическом открытии экран подтверждения открывается из главного экрана Android TV.
 
-> [!WARNING]
-> DRM content (e.g. from the Apple TV application) is not supported.
+«Требовать PIN» — одна общая настройка для AirPlay и браузерной передачи. При выключении код не нужен в обоих сценариях. AirPlay генерирует код для подключения Mac, браузер показывает свой четырёхзначный код на экране AirDrop. После изменения настройки обновите страницу браузера. Подтверждение приёма на TV остаётся обязательным.
 
-## Implementation
+Лимит 256 МиБ снят. Файлы передаются потоково, без загрузки целиком в оперативную память. Размер ограничен свободным местом с резервом 16 МиБ. За одну передачу можно выбрать до 128 файлов с разными именами. Общего таймаута для загрузки в браузере нет; при отсутствии входящих данных в течение 60 секунд соединение закрывается. На подтверждение приёма отводится 40 секунд.
 
-This application uses the C-based [UxPlay](https://github.com/FDH2/UxPlay) library to implement the AirPlay/RAOP protocol, with a JNI bridge to the Android application layer. Audio can be decoded via MediaCodec or a software ALAC decoder, while mirroring video is decoded via MediaCodec and rendered to a SurfaceView. HLS sessions are served through a local playlist proxy.
+Во время загрузки телевизор показывает имя текущего файла, номер файла в пакете, общий процент и объём, измеренную скорость и приблизительное оставшееся время. После загрузки отображается отдельный этап проверки и сохранения. Кнопка «Отменить» на TV закрывает загрузку и удаляет только незавершённые файлы этой передачи. После обрыва приёмник готов к новой отправке; возобновление с места обрыва пока не реализовано.
 
-```mermaid
-flowchart LR
-    AppleDevice["Apple Device (Sender)"]
-    UxPlay["UxPlay (C/JNI)<br/>RAOP + mDNS<br/>FairPlay + HLS"]
-    AndroidApp["Android (Receiver)<br/>MediaCodec + AudioTrack<br/>ExoPlayer (HLS)"]
+По умолчанию новые файлы сохраняются в закрытом каталоге Air TV: `/data/user/0/dev.airtv.receiver/files/received/`. Они доступны в списке внутри AirDrop, остаются после перезапуска и удаляются при удалении приложения или очистке его данных.
 
-    AppleDevice -- "RAOP / HLS" --> UxPlay
-    UxPlay --> AndroidApp
+Включите **Настройки → Сохранять в Downloads**, чтобы новые загрузки попадали в `Download/AirTV` (обычно `/storage/emulated/0/Download/AirTV`). На Android 10+ они записываются через MediaStore без доступа ко всем файлам. На Android 7–9 потребуется разрешение на запись в общую память; каждая передача помещается в отдельную подпапку. Изменение настройки не переносит уже сохранённые файлы. Общие Downloads остаются после удаления приложения; список внутри приложения содержит только созданные им записи.
+
+В списке AirDrop можно открыть видео/аудио системным плеером, небольшие текстовые файлы и изображения. Для удаления выберите «Удалить» рядом с файлом и подтвердите действие. Удаление работает и для закрытой памяти, и для собственных файлов Air TV в Downloads. Оно необратимо и не затрагивает чужие файлы.
+
+Это браузерная загрузка по локальной сети, отдельное приложение на Mac не требуется. **Нативная отправка через AirDrop в Finder пока не работает.** HTTP в локальной сети не шифруется. Экспериментальный TLS-приёмник на 8785 включён в исходники, но не означает совместимость Finder.
+
+## Установка на телевизор
+
+Перенесите APK на телевизор, например на USB-накопителе, и откройте его через файловый менеджер. При необходимости разрешите установку из этого источника в настройках Android TV. После установки приложение появится в списке приложений телевизора под именем Air TV.
+
+Если используете ADB и телевизор уже подключён для отладки:
+
+```sh
+adb install -r AirTV-0.1.4-preview.apk
 ```
 
-CMake is used for native C/C++ components under [`app/src/main/cpp`](app/src/main/cpp). Submodules must be initialized before building. 
+## Интерфейс
 
-```bash
-git submodule update --init --recursive
+На экранах AirPlay и AirDrop используется одна нижняя панель: «Настройки», «AirPlay», «AirDrop» и включение приёма. Настройки постоянно видны. Активный раздел выделен мятной заливкой; рамка показывает фокус пульта. Оба раздела используют одну тему, шрифты и кнопки. Настройки: имя, общий переключатель PIN, Downloads, работа в фоне, автоматическое открытие и автозапуск.
+
+Приём в фоне и «Открывать при трансляции» включены по умолчанию; при обновлении с 0.1.0 оба режима включаются один раз. После этого приложение сохраняет ваши изменения. Можно выйти на главный экран Android TV: приёмник остаётся доступным на Mac. При запросе подключения появляется PIN, при начале повтора экрана или видео открывается трансляция. Поиск устройства и простое TCP-подключение окно не открывают.
+
+На Android 10+ для автоматического открытия требуется разрешение Air TV «Поверх других приложений». В настройках Air TV есть кнопка «Разрешить автоматическое открытие», ведущая в системные настройки. Если прошивка не содержит этого экрана, приложение объясняет, что разрешение нужно выдать с компьютера через ADB. На MiTV-MOOQ0 (Android 10) такое меню отсутствует. После явного согласия владельца можно выполнить:
+
+```sh
+adb -s 192.168.0.31:5555 shell appops set dev.airtv.receiver SYSTEM_ALERT_WINDOW allow
+```
+
+Это разрешение позволяет Air TV открывать экран поверх текущего приложения. Чтобы отозвать его, замените `allow` на `default`. Без разрешения приём в фоне работает, но экран трансляции придётся открыть вручную.
+
+Автозапуск после включения телевизора по умолчанию отключён. Если включить его, после загрузки системы запустится фоновый приёмник AirPlay и файлов. После установки нужно хотя бы один раз открыть приложение. Режим ожидания телевизора не равен полной перезагрузке. Обновление сохраняет ранее выбранный автозапуск. Принудительная остановка приложения через настройки Android останавливает и приёмник.
+
+## Восстановление AirPlay
+
+После события сброса от нативного движка Air TV восстанавливает приёмник AirPlay через 2 секунды. Новая видеосессия отменяет отложенное восстановление предыдущей; браузерный приёмник и текущая загрузка при этом сохраняются. При завершении последнего подключения очищаются состояние повтора экрана и декодер.
+
+При изменении адресов Wi-Fi/Ethernet обновляется объявление AirPlay в локальной сети. На время активного повтора экрана удерживается Wi-Fi lock; после завершения он освобождается. При работе в фоне Android может пересоздать службу после завершения процесса — Air TV повторно запускает её, только если приём и фоновый режим оставлены включёнными. Принудительная остановка через системные настройки отменяет такую работу, автозапуск после перезагрузки управляется отдельной настройкой.
+
+Таймера отключения по отсутствию видеокадров нет: статичный экран Mac не считается ошибкой. Восстановление приёмника не означает автоматическое продолжение прерванной трансляции: может понадобиться снова выбрать телевизор на Mac. Длительный повтор экрана и реальное пересоздание процесса Android в этой версии ещё требуют проверки.
+
+## Совместимость и ограничения
+
+- Протокольный движок поддерживает AirPlay mirroring (H.264/H.265), звук и прямое воспроизведение видео/HLS. Конкретные кодеки и разрешение зависят от телевизора.
+- DRM-видео, например защищённый контент Apple TV, не поддерживается.
+- Полная совместимость со всеми функциями AirPlay 2 не обещается.
+- Установка и запуск приёмника проверены на физическом MiTV-MOOQ0 с Android 10; Mac обнаруживает его через mDNS как Air TV. Фоновый приём и автоматический показ PIN проверены реальными RTSP-запросами. Полную трансляцию с Mac и автозапуск после перезагрузки ещё нужно проверить.
+- Работа в фоне и открытие из фона зависят от ограничений прошивки. Автоматическое открытие использует системное разрешение «Поверх других приложений»; сам приёмник не создаёт плавающих окон.
+- APK прототипа подписан отладочным ключом; для выпуска нужна собственная release-подпись.
+
+## Сборка
+
+JDK 21, Android SDK platform 36, build-tools 35.0.0. Для полной сборки также нужны NDK 27.0.12077973, CMake 3.22.1, Python 3, GNU make, Perl и git. Рекомендуется Android Studio или Linux.
+
+В `local.properties` укажите `sdk.dir=/absolute/path/to/android-sdk`.
+
+Быстрая сборка с готовыми нативными библиотеками точного upstream-релиза:
+
+```sh
+./gradlew assembleDebug -PprebuiltNative=true
+```
+
+Компактный устанавливаемый прототип с отладочной подписью:
+
+```sh
+./gradlew assembleRelease -PprebuiltNative=true -PprototypeSigning=true
+```
+
+Полная сборка нативного движка из включённых исходников:
+
+```sh
 ./gradlew assembleDebug
 ```
 
-Check out the [CI](https://github.com/jqssun/android-airplay-server/blob/main/.github/workflows/apk.yml) for more details on reproducible builds.
+Исходники подмодулей включены в архив. Инициализировать подмодули после распаковки не требуется. `git` нужен для применения патчей, но метаданные `.git` не нужны. Перед применением патчей их целевые файлы восстанавливаются из `app/src/main/cpp/upstream-original/UxPlay`; при изменении этих файлов обновляйте и соответствующие исходные снимки. При сборке из исходников OpenSSL скачивается автоматически.
 
-## Credits
+Для release-подписи можно указать `storeFile`, `storePassword`, `keyAlias`, `keyPassword` в локальном `local.properties`. Не передавайте этот файл вместе с исходниками.
 
-- [UxPlay](https://github.com/FDH2/UxPlay) for the AirPlay/RAOP server implementation
-- [FFmpeg](https://ffmpeg.org) for the lossless audio decoder
-- [Next Player](https://github.com/anilbeesetti/nextplayer) for the video player
+## Проверка сборки
 
----
+`assembleRelease` и `lintRelease` проходят. В `app/lint-baseline.xml` перечислены только 142 ранее существовавших отсутствующих перевода расширенных upstream-настроек: для них остаётся английский текст. Новые ошибки lint не отключены. Протокольные тесты находятся в `tests/airdrop-lab`, проверки браузерного HTTP — в `tests/test-browser-receiver.py`. Перед запуском аппаратных проверок укажите свой путь к ADB и выбранный телевизор; они содержат явный адрес тестового .31, а не сканирование сети.
 
-Disclaimer: This project is not affiliated with Apple Inc.
+ZXing Core 3.5.3 используется для QR-кодов; лицензия Apache-2.0, [исходники проекта](https://github.com/zxing/zxing).
+
+## Основа и лицензии
+
+Это адаптация [android-airplay-server](https://github.com/jqssun/android-airplay-server), автор jqssun. Основа зафиксирована на v0.0.31, commit `c8defdd70d7e6a04f4f1b71d353653682d594106`.
+
+Исходная лицензия GPL-3.0 сохранена в `LICENSE`; изменения интерфейса Air TV распространяются на тех же условиях. Сохранены исходники и лицензии UxPlay, FFmpeg, libplist, openssl-cmake и остальных включённых компонентов.
+
+Готовые `.so` в `app/src/prebuilt/jniLibs` извлечены из официального upstream APK v0.0.31 с совпадающим commit. Происхождение и SHA-256 артефакта записаны в `NATIVE-PROVENANCE.md`. При изменении JNI или нативного кода собирайте полную версию без `-PprebuiltNative=true`.
+
+В Air TV изменены главный экран, тема, значок, имя/идентификатор приложения, настройки по умолчанию, поведение возврата в приложение и проверка доступности Picture-in-Picture. После проверки на телевизоре исправлен цвет текста на тёмном главном экране. В 0.1.1 добавлены фоновый приём и открытие окна по PIN/началу трансляции; в 0.1.4 исправлена подсказка для телевизоров без меню разрешения «Поверх других приложений». Протокольный движок сохранён.
+
+## Проверки прототипа 2026-09-17
+
+- `assembleRelease` и `lintVitalRelease`: успешно.
+- Подпись APK Scheme v2: проверена `apksigner` (совместима с API 24+).
+- Идентификатор: `dev.airtv.receiver`, версия `0.1.4`, minSdk 24; Android TV launcher присутствует.
+- APK содержит ARM 32/64 и x86_64; SHA-256 нативных библиотек совпадает с зафиксированным upstream-релизом.
+- Архив исходников проходит ZIP integrity check. Патчи применяются без Git-метаданных; повторное применение через восстановление оригиналов даёт одинаковые исходники.
+- Макеты проверены в браузере на ширине 780 и 360 px; локальные переключатели и смена имени работают.
+- Установка, запуск и регистрация AirPlay/RAOP проверены на MiTV-MOOQ0 (Android 10). Mac обнаруживает Air TV в локальной сети. После выхода на главный экран TV приёмник отвечает на RTSP OPTIONS и обнаруживается с Mac. Запрос `/pair-pin-start` автоматически вывел Air TV на передний план и показал PIN. Проверено сохранение фонового приёма, автооткрытия, автозапуска и прежнего выбора PIN после обновления. Разрешение SYSTEM_ALERT_WINDOW выдано через ADB с явного согласия владельца; телевизор и приложение подтверждают выдачу. Полная трансляция с Mac и запуск после перезагрузки ещё не проверены.

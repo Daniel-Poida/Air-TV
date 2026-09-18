@@ -18,6 +18,12 @@ import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.net.ConnectivityManager
+import android.net.LinkProperties
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
+import android.net.wifi.WifiManager
 import android.os.PowerManager
 import android.os.SystemClock
 import android.support.v4.media.MediaMetadataCompat
@@ -55,6 +61,7 @@ import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 
@@ -67,12 +74,23 @@ data class VideoPlaybackInfo(
     val buffering: Boolean = false,
 )
 
+@androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
 class AirPlayService : LifecycleService(), RaopCallbackHandler, LogListener {
 
     private var nativeHandle = 0L
     private var nsdManager: NsdServiceManager? = null
     private var wakeLock: PowerManager.WakeLock? = null
     private var foregroundStarted = false
+    private var boundPort = 0
+    @Volatile private var stopping = false
+    @Volatile private var mirrorGeneration = 0L
+    private var wifiLock: WifiManager.WifiLock? = null
+    private var networkCallback: ConnectivityManager.NetworkCallback? = null
+    private val networkAddresses = mutableMapOf<Network,String>()
+    private var recovery: Runnable? = null
+    private val _connectionNotice = MutableStateFlow("")
+    val connectionNotice = _connectionNotice.asStateFlow()
+    private val refreshDiscovery = Runnable { if (_serverState.value == ServerState.RUNNING && !stopping) advertiseServices() }
     private var lastOrientation = Configuration.ORIENTATION_UNDEFINED
 
     val videoRenderer = VideoRenderer(this)
@@ -207,7 +225,9 @@ class AirPlayService : LifecycleService(), RaopCallbackHandler, LogListener {
 
     override fun onCreate() {
         super.onCreate()
+        liveService = java.lang.ref.WeakReference(this)
         createNotificationChannel()
+        observeLocalNetworks()
         dacpController = DacpController(this)
         dacpPlayer = DacpPlayer(
             mainLooper,
@@ -330,13 +350,20 @@ class AirPlayService : LifecycleService(), RaopCallbackHandler, LogListener {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if (intent?.action == ACTION_START_SERVER) {
+        super.onStartCommand(intent, flags, startId)
+        if(intent==null && (!prefs.getBoolean("receiver_enabled",false) ||
+                !prefs.getBoolean(Prefs.RUN_IN_BACKGROUND,Prefs.DEF_RUN_IN_BACKGROUND))) {
+            stopSelf(startId)
+            return START_NOT_STICKY
+        }
+        if (intent?.action == ACTION_START_SERVER || (intent == null &&
+                prefs.getBoolean("receiver_enabled",false) && prefs.getBoolean(Prefs.RUN_IN_BACKGROUND,Prefs.DEF_RUN_IN_BACKGROUND))) {
             promoteToForeground()
             val name = prefs.getString(Prefs.SERVER_NAME, Prefs.DEF_SERVER_NAME) ?: Prefs.DEF_SERVER_NAME
             startServer(name, ensureServiceStarted = false)
             if (_serverState.value != ServerState.RUNNING) stopSelf(startId)
         }
-        return START_NOT_STICKY
+        return if (_serverState.value == ServerState.RUNNING && prefs.getBoolean(Prefs.RUN_IN_BACKGROUND,Prefs.DEF_RUN_IN_BACKGROUND)) START_STICKY else START_NOT_STICKY
     }
 
     fun startServer(name: String) {
@@ -346,6 +373,8 @@ class AirPlayService : LifecycleService(), RaopCallbackHandler, LogListener {
     private fun startServer(name: String, ensureServiceStarted: Boolean) {
         if (_serverState.value == ServerState.RUNNING) return
         val effectiveName = name.ifBlank { Prefs.DEF_SERVER_NAME }
+        stopping = false
+        prefs.edit().putBoolean("receiver_enabled",true).apply()
 
         val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
         wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "airplay:server").apply { acquire() }
@@ -419,23 +448,76 @@ class AirPlayService : LifecycleService(), RaopCallbackHandler, LogListener {
             return
         }
 
-        // register mdns services
-        val raopTxt = NativeBridge.nativeGetRaopTxtRecords(nativeHandle) ?: emptyMap()
-        val airplayTxt = NativeBridge.nativeGetAirplayTxtRecords(nativeHandle) ?: emptyMap()
-        val raopName = NativeBridge.nativeGetRaopServiceName(nativeHandle) ?: "AirPlay"
-        val resolvedName = NativeBridge.nativeGetServerName(nativeHandle) ?: effectiveName
-
-        if (prefs.getBoolean(Prefs.ADVERTISE_AUDIO, Prefs.DEF_ADVERTISE_AUDIO)) {
-            nsdManager?.registerRaop(raopName, port, raopTxt)
-        }
-        nsdManager?.registerAirplay(resolvedName, port, airplayTxt)
-
+        boundPort = port
         _serverState.value = ServerState.RUNNING
+        advertiseServices()
         if (ensureServiceStarted) {
             ContextCompat.startForegroundService(this, Intent(this, AirPlayService::class.java))
         }
         promoteToForeground()
+        io.github.jqssun.airplay.files.FilesReceiver.start(this)
         log("Server started on port $port")
+    }
+
+    private fun advertiseServices() {
+        if (nativeHandle == 0L || boundPort == 0) return
+        // Recreate registration so discovery follows Wi-Fi/Ethernet address changes.
+        nsdManager?.release()
+        nsdManager = NsdServiceManager(this).apply { acquireMulticastLock() }
+        if (prefs.getBoolean(Prefs.ADVERTISE_AUDIO,Prefs.DEF_ADVERTISE_AUDIO)) {
+            nsdManager?.registerRaop(NativeBridge.nativeGetRaopServiceName(nativeHandle) ?: "AirPlay",boundPort,
+                NativeBridge.nativeGetRaopTxtRecords(nativeHandle) ?: emptyMap())
+        }
+        nsdManager?.registerAirplay(NativeBridge.nativeGetServerName(nativeHandle) ?: Prefs.DEF_SERVER_NAME,boundPort,
+            NativeBridge.nativeGetAirplayTxtRecords(nativeHandle) ?: emptyMap())
+    }
+
+    private fun observeLocalNetworks() {
+        val manager=getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val callback=object : ConnectivityManager.NetworkCallback() {
+            override fun onLinkPropertiesChanged(network:Network, properties:LinkProperties) {
+                val addresses=properties.linkAddresses.map { it.address.hostAddress }.sortedBy { it }.joinToString(",")
+                _mainHandler.post {
+                    val old=networkAddresses.put(network,addresses)
+                    if(_connectionNotice.value.startsWith("Сеть телевизора")) _connectionNotice.value="Сеть восстановлена. Выбери телевизор на Mac ещё раз."
+                    if (old!=addresses) { _mainHandler.removeCallbacks(refreshDiscovery);_mainHandler.postDelayed(refreshDiscovery,1200) }
+                }
+            }
+            override fun onLost(network:Network) {
+                _mainHandler.post {
+                    networkAddresses.remove(network)
+                    _mainHandler.removeCallbacks(refreshDiscovery);_mainHandler.postDelayed(refreshDiscovery,1200)
+                    if(networkAddresses.isEmpty() && _serverState.value==ServerState.RUNNING) {
+                        _connectionNotice.value="Сеть телевизора недоступна. Проверь подключение."
+                        log("Local network lost")
+                    }
+                }
+            }
+        }
+        try {
+            manager.registerNetworkCallback(NetworkRequest.Builder().addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                .addTransportType(NetworkCapabilities.TRANSPORT_ETHERNET).build(),callback)
+            networkCallback=callback
+        } catch(error:Exception) { Log.w(TAG,"Network monitoring unavailable",error) }
+    }
+
+    private fun setStreamingWifiLock(active:Boolean) {
+        if(active && wifiLock==null) {
+            val manager=applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+            try { wifiLock=manager.createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF,"airtv:stream").apply {setReferenceCounted(false);acquire()} }
+            catch(error:Exception) { Log.w(TAG,"Streaming Wi-Fi lock unavailable",error) }
+        } else if(!active) { wifiLock?.let { if(it.isHeld) it.release() };wifiLock=null }
+    }
+
+    // Native callbacks run on threads joined by nativeStop: teardown must happen on main.
+    private fun recoverAirPlay(generation:Long) {
+        if(stopping || _serverState.value!=ServerState.RUNNING || mirrorGeneration!=generation) return
+        val name=prefs.getString(Prefs.SERVER_NAME,Prefs.DEF_SERVER_NAME) ?: Prefs.DEF_SERVER_NAME
+        releaseServer(stopService=false)
+        startServer(name,ensureServiceStarted=false)
+        _connectionNotice.value=if(_serverState.value==ServerState.RUNNING)
+            "Соединение прервалось. Выбери телевизор на Mac ещё раз." else "Не удалось восстановить приём AirPlay."
+        log("AirPlay receiver recovered after stream reset")
     }
 
     private fun _orientationFollowsDevice(): Boolean =
@@ -489,6 +571,17 @@ class AirPlayService : LifecycleService(), RaopCallbackHandler, LogListener {
     }
 
     fun stopServer() {
+        prefs.edit().putBoolean("receiver_enabled",false).apply()
+        _connectionNotice.value=""
+        releaseServer(stopService=true)
+    }
+
+    private fun releaseServer(stopService:Boolean) {
+        stopping=true
+        recovery?.let {_mainHandler.removeCallbacks(it)};recovery=null
+        _mainHandler.removeCallbacks(refreshDiscovery)
+        setStreamingWifiLock(false)
+        if(stopService) io.github.jqssun.airplay.files.FilesReceiver.stop()
         audioRenderer.detachEngine()
         if (nativeHandle != 0L) {
             NativeBridge.nativeStop(nativeHandle)
@@ -516,9 +609,12 @@ class AirPlayService : LifecycleService(), RaopCallbackHandler, LogListener {
         _serverState.value = ServerState.STOPPED
         _connectionCount.value = 0
         _refreshDacpPlayer()
-        stopForeground(STOP_FOREGROUND_REMOVE)
-        foregroundStarted = false
-        stopSelf()
+        boundPort = 0
+        if(stopService) {
+            stopForeground(STOP_FOREGROUND_REMOVE)
+            foregroundStarted = false
+            stopSelf()
+        }
         log("Server stopped")
     }
 
@@ -579,7 +675,11 @@ class AirPlayService : LifecycleService(), RaopCallbackHandler, LogListener {
     }
 
     override fun onDestroy() {
-        stopServer()
+        if (liveService.get() === this) liveService.clear()
+        networkCallback?.let { try {(getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).unregisterNetworkCallback(it)} catch(_:Exception){} }
+        networkCallback=null
+        // System recreation preserves the requested background receiver state.
+        releaseServer(stopService=true)
         dacpPlayer.release()
         mediaReceiver?.let {
             try { unregisterReceiver(it) } catch (_: Exception) {}
@@ -607,6 +707,9 @@ class AirPlayService : LifecycleService(), RaopCallbackHandler, LogListener {
     }
 
     override fun onVideoPlay(location: String, startPositionSeconds: Float) {
+        mirrorGeneration++
+        _connectionNotice.value=""
+        _mainHandler.post {recovery?.let {_mainHandler.removeCallbacks(it)};recovery=null}
         _videoLocation.value = location
         _videoPlaySeq.value++
         _videoPollSuppressed = false
@@ -615,6 +718,7 @@ class AirPlayService : LifecycleService(), RaopCallbackHandler, LogListener {
         _videoPlaybackSize.value = null
         _videoTitle.value = ""
         _videoPlaybackActive.value = true
+        if (shouldLaunchOnConnect()) launchMainActivity()
         airPlayVideoPlayer.play(location, startPositionSeconds)
         // claim media-button routing for keys that arrive as media-session events
         mediaSession?.isActive = true
@@ -711,20 +815,19 @@ class AirPlayService : LifecycleService(), RaopCallbackHandler, LogListener {
     }
 
     override fun onConnectionInit() {
-        val firstConnection = _connectionCount.value == 0
-        _connectionCount.value++
+        _connectionCount.update { it+1 }
         log("Client connected (${_connectionCount.value})")
-        if (!firstConnection) return
-        // conn_init is only a tcp pre-auth signal. pin-required sessions must wait for
-        // onDisplayPin, otherwise the server ui can move before the client pin is current
-        if (requiresPin()) return
-        if (!shouldLaunchOnConnect()) return
-        launchMainActivity()
+        // Discovery and pre-auth TCP connections must not interrupt another app.
+        // Open for an actual pairing prompt or when a video session starts.
     }
 
     override fun onConnectionDestroy() {
-        _connectionCount.value = (_connectionCount.value - 1).coerceAtLeast(0)
+        _connectionCount.update { (it-1).coerceAtLeast(0) }
         if (_connectionCount.value == 0) {
+            clearPin()
+            _mirroringActive.value=false
+            videoRenderer.stopSession()
+            _mainHandler.post {if(_connectionCount.value==0) setStreamingWifiLock(false)}
             // clients may drop without POST /stop; must run before the poll-state reset
             _endVideoPlayback("AirPlay Video stopped (disconnect)")
             // last client gone: release audio output devices to save power
@@ -754,12 +857,21 @@ class AirPlayService : LifecycleService(), RaopCallbackHandler, LogListener {
 
     override fun onConnectionReset(reason: Int) {
         log("Connection reset: $reason")
+        if(stopping) return
+        val generation=mirrorGeneration
+        _mainHandler.post {
+            if(stopping || _serverState.value!=ServerState.RUNNING || mirrorGeneration!=generation) return@post
+            _connectionNotice.value="Соединение AirPlay прервалось. Восстанавливаем приём…"
+            recovery?.let {_mainHandler.removeCallbacks(it)}
+            recovery=Runnable {recoverAirPlay(generation)}.also {_mainHandler.postDelayed(it,2000)}
+        }
     }
 
     override fun onDisplayPin(pin: String) {
         // a new pin is the sync point with the client prompt: show every new value immediately
         if (_lastPin == pin) return
         _lastPin = pin
+        if (shouldLaunchOnConnect()) launchMainActivity()
         pinCallback?.invoke(pin)
         _updateMediaNotification()
     }
@@ -807,9 +919,16 @@ class AirPlayService : LifecycleService(), RaopCallbackHandler, LogListener {
     }
 
     override fun onMirrorRunning(running: Boolean) {
-        if (running) videoRenderer.startSession() else {
+        if (running) {
+            mirrorGeneration++
+            _connectionNotice.value=""
+            _mainHandler.post {if(stopping) return@post;recovery?.let {_mainHandler.removeCallbacks(it)};recovery=null;setStreamingWifiLock(true)}
+            videoRenderer.startSession()
+            if (shouldLaunchOnConnect()) launchMainActivity()
+        } else {
             videoRenderer.stopSession()
             _mirroringActive.value = false
+            _mainHandler.post {setStreamingWifiLock(false)}
         }
         _setAudioOnly(!running)
     }
@@ -1023,10 +1142,6 @@ class AirPlayService : LifecycleService(), RaopCallbackHandler, LogListener {
         foregroundStarted = true
     }
 
-    private fun requiresPin(): Boolean {
-        return prefs.getBoolean(Prefs.REQUIRE_PIN, Prefs.DEF_REQUIRE_PIN)
-    }
-
     private fun shouldLaunchOnConnect(): Boolean {
         return prefs.getBoolean(Prefs.LAUNCH_ON_CONNECT, Prefs.DEF_LAUNCH_ON_CONNECT)
     }
@@ -1058,7 +1173,6 @@ class AirPlayService : LifecycleService(), RaopCallbackHandler, LogListener {
             }
         } else {
             if (_lastPin != null) {
-                // passive handoff only: do not launch/reorder the activity during pin auth
                 builder.setContentTitle(getString(R.string.notification_pin_title))
                     .setContentText(getString(R.string.notification_pin_text, _lastPin))
             } else {
@@ -1075,6 +1189,7 @@ class AirPlayService : LifecycleService(), RaopCallbackHandler, LogListener {
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
             try {
                 startActivity(launchIntent)
+                log("Requested receiver foreground for AirPlay session")
             } catch (e: Exception) {
                 Log.w(TAG, "Failed to launch activity", e)
             }
@@ -1104,6 +1219,14 @@ class AirPlayService : LifecycleService(), RaopCallbackHandler, LogListener {
     }
 
     companion object {
+        private var liveService = java.lang.ref.WeakReference<AirPlayService>(null)
+        @JvmStatic fun stopReceiver() { liveService.get()?.stopServer() }
+        fun stopIfIdleOutsideApp() {
+            val service = liveService.get() ?: return
+            if (!service.prefs.getBoolean(Prefs.RUN_IN_BACKGROUND, Prefs.DEF_RUN_IN_BACKGROUND) &&
+                service._connectionCount.value == 0 && !io.github.jqssun.airplay.files.FilesReceiver.isBusy() &&
+                service._serverState.value == ServerState.RUNNING) service.stopServer()
+        }
         private const val TAG = "AirPlayService"
         private const val VOL_SYNC_EPS = 0.033f
         private const val VOL_SYNC_MAX_STEPS = 32

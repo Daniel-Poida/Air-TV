@@ -64,6 +64,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        if (intent.getBooleanExtra("open_settings", false)) viewModel.requestSettings()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
             ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
@@ -93,7 +94,7 @@ class MainActivity : ComponentActivity() {
         }
 
         // auto-enter pre-declared in pip params
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && supportsPip()) {
             lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
                     combine(
@@ -118,11 +119,18 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        if (intent.getBooleanExtra("open_settings", false)) viewModel.requestSettings()
+    }
+
     fun enterPip() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || !supportsPip()) return
         enterPictureInPictureMode(_pipParams())
     }
 
+    @androidx.annotation.RequiresApi(26)
     private fun _pipParams(): PictureInPictureParams {
         val aspect = if (viewModel.videoPlaybackActive.value) viewModel.videoPlaybackAspect.value
             else viewModel.videoAspect.value
@@ -134,7 +142,10 @@ class MainActivity : ComponentActivity() {
         return builder.build()
     }
 
+    private fun supportsPip(): Boolean = packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
+
     private fun _shouldAutoPip(): Boolean =
+        supportsPip() &&
         viewModel.serverState.value == AirPlayService.ServerState.RUNNING &&
             viewModel.connectionCount.value > 0
 
@@ -148,13 +159,10 @@ class MainActivity : ComponentActivity() {
         isInPip.value = inPip
     }
 
-    override fun onStop() {
-        super.onStop()
-        // never stop mid-session
-        if (!viewModel.runInBackground.value && !isChangingConfigurations &&
-            viewModel.serverState.value == AirPlayService.ServerState.RUNNING &&
-            viewModel.connectionCount.value == 0) {
-            viewModel.stopServer()
+    override fun onStart() {
+        super.onStart()
+        if (viewModel.autoStart.value && service?.serverState?.value == AirPlayService.ServerState.STOPPED) {
+            viewModel.startServer()
         }
     }
 

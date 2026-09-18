@@ -12,13 +12,21 @@ val localProps = Properties().apply {
     rootProject.file("local.properties").takeIf { it.exists() }?.inputStream()?.use(::load)
 }
 
+// Optional use of native libraries from the exact upstream v0.0.31 release.
+// Full C/C++ source remains included; omit this property to build it with the NDK.
+val usePrebuiltNative = providers.gradleProperty("prebuiltNative").orNull == "true"
 val allAbis = listOf("arm64-v8a", "armeabi-v7a", "x86_64")
 
 android {
+    // Existing upstream advanced strings fall back to English; new lint errors remain checked.
+    lint { baseline = file("lint-baseline.xml") }
     namespace = "io.github.jqssun.airplay"
     compileSdk = 36
     ndkVersion = "27.0.12077973"
 
+    providers.gradleProperty("prototypeKeystore").orNull?.let { path ->
+        signingConfigs.getByName("debug").storeFile = file(path)
+    }
     if (localProps.containsKey("storeFile")) {
         signingConfigs {
             create("release") {
@@ -31,25 +39,33 @@ android {
     }
 
     defaultConfig {
-        applicationId = "io.github.jqssun.airplay"
+        applicationId = "dev.airtv.receiver"
         minSdk = 24
         targetSdk = 36
-        versionCode = 31
-        versionName = "0.0.31"
+        versionCode = 5
+        versionName = "0.1.4"
 
-        externalNativeBuild {
-            cmake {
-                arguments += "-DANDROID_STL=c++_shared"
-                arguments += "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON"
+        if (!usePrebuiltNative) {
+            externalNativeBuild {
+                cmake {
+                    arguments += "-DANDROID_STL=c++_shared"
+                    arguments += "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON"
+                }
             }
         }
     }
 
-    externalNativeBuild {
-        cmake {
-            path = file("src/main/cpp/CMakeLists.txt")
+    if (!usePrebuiltNative) {
+        externalNativeBuild {
+            cmake {
+                path = file("src/main/cpp/CMakeLists.txt")
+                version = "3.22.1"
+            }
         }
     }
+    sourceSets.getByName("main").jniLibs.setSrcDirs(
+        if (usePrebuiltNative) listOf("src/prebuilt/jniLibs") else emptyList<String>()
+    )
 
     buildTypes {
         debug {
@@ -59,6 +75,9 @@ android {
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             signingConfigs.findByName("release")?.let { signingConfig = it }
+            if (providers.gradleProperty("prototypeSigning").orNull == "true") {
+                signingConfig = signingConfigs.getByName("debug")
+            }
             ndk { abiFilters += allAbis }
         }
         // debuggable build with HWASan (arm64) + UBSan in native code
@@ -97,23 +116,24 @@ android {
 
 tasks.register("applyUxplayPatches") {
     doLast {
-        fun git(vararg args: String): String {
-            val proc = ProcessBuilder("git", "-C", "$projectDir/src/main/cpp/third_party/UxPlay", *args)
-                .redirectErrorStream(true).start()
-            val out = proc.inputStream.bufferedReader().readText()
-            check(proc.waitFor() == 0) { "git ${args.joinToString(" ")} failed:\n$out" }
-            return out
+        // Restore pristine versions of patch targets. This also works in source
+        // archives without .git metadata and across repeated native builds.
+        val source = file("src/main/cpp/third_party/UxPlay")
+        val originals = file("src/main/cpp/upstream-original/UxPlay")
+        originals.walkTopDown().filter { it.isFile }.forEach { original ->
+            original.copyTo(source.resolve(original.relativeTo(originals)), overwrite = true)
         }
         val patches = file("src/main/cpp/patches/UxPlay").listFiles { f -> f.extension == "patch" }!!.sorted()
-        val touched = patches.flatMap { git("apply", "--numstat", it.path).trim().lines() }
-            .map { it.substringAfterLast("\t") }.distinct()
-        git("checkout", "--", *touched.toTypedArray())
-        patches.forEach { git("apply", "--unidiff-zero", it.path) }
+        patches.forEach { patch ->
+            val proc = ProcessBuilder("git", "-c", "core.autocrlf=false", "-C", source.absolutePath,
+                "apply", "--unidiff-zero", patch.absolutePath).redirectErrorStream(true).start()
+            val out = proc.inputStream.bufferedReader().readText()
+            check(proc.waitFor() == 0) { "Cannot apply ${patch.name}:\n$out" }
+        }
     }
 }
-
 tasks.configureEach {
-    if (name.startsWith("configureCMake")) dependsOn("applyUxplayPatches")
+    if (!usePrebuiltNative && name.startsWith("configureCMake")) dependsOn("applyUxplayPatches")
 }
 
 tasks.withType<Zip>().configureEach {
@@ -122,6 +142,8 @@ tasks.withType<Zip>().configureEach {
 }
 
 dependencies {
+    implementation(project(":airdrop-core"))
+    implementation("com.google.zxing:core:3.5.3")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.runtime)

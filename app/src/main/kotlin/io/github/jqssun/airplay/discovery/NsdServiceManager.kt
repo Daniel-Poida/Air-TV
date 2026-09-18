@@ -9,6 +9,7 @@ import android.util.Log
 class NsdServiceManager(private val ctx: Context) {
 
     private val nsdManager = ctx.getSystemService(Context.NSD_SERVICE) as NsdManager
+    @Volatile private var released=false
     private var multicastLock: WifiManager.MulticastLock? = null
     private var raopRegistration: NsdManager.RegistrationListener? = null
     private var airplayRegistration: NsdManager.RegistrationListener? = null
@@ -31,6 +32,7 @@ class NsdServiceManager(private val ctx: Context) {
 
         raopRegistration = object : NsdManager.RegistrationListener {
             override fun onServiceRegistered(info: NsdServiceInfo) {
+                if(released) {try {nsdManager.unregisterService(this)}catch(_:Exception){};return}
                 Log.i(TAG, "RAOP registered: ${info.serviceName}")
             }
             override fun onRegistrationFailed(info: NsdServiceInfo, code: Int) {
@@ -56,6 +58,7 @@ class NsdServiceManager(private val ctx: Context) {
 
         airplayRegistration = object : NsdManager.RegistrationListener {
             override fun onServiceRegistered(info: NsdServiceInfo) {
+                if(released) {try {nsdManager.unregisterService(this)}catch(_:Exception){};return}
                 Log.i(TAG, "AirPlay registered: ${info.serviceName}")
             }
             override fun onRegistrationFailed(info: NsdServiceInfo, code: Int) {
@@ -83,6 +86,7 @@ class NsdServiceManager(private val ctx: Context) {
     }
 
     fun release() {
+        released=true
         unregisterAll()
         multicastLock?.release()
         multicastLock = null

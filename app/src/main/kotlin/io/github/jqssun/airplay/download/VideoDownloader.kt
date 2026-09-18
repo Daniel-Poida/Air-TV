@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 // transformer requires a looper thread
+@androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
 class VideoDownloader(private val context: Context) {
 
     private val mainHandler = Handler(Looper.getMainLooper())

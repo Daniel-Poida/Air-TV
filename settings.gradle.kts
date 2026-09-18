@@ -15,5 +15,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "AirPlayServer"
+rootProject.name = "AirTV"
 include(":app")
+include(":airdrop-core")
+include(":airdrop-lab-app")

@@ -1,0 +1,429 @@
+<?xml version='1.0' encoding='utf-8'?>
+<issues format="6" by="lint 8.9.2">
+  <issue id="MissingTranslation" message="&quot;app_name&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;app_name&quot;&gt;Air TV&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="3" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;stop_service&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;stop_service&quot;&gt;Stop&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="11" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;tab_overview&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;tab_overview&quot;&gt;Overview&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="14" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;tab_logs&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;tab_logs&quot;&gt;Logs&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="15" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;tab_settings&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;tab_settings&quot;&gt;Settings&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="16" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;server_stopped&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;server_stopped&quot;&gt;Server stopped&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="19" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;waiting_for_connection&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;waiting_for_connection&quot;&gt;Waiting for connection...&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="20" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;waiting_for_playback&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;waiting_for_playback&quot;&gt;Press start on the sender...&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="21" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;error_starting_server&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;error_starting_server&quot;&gt;Error starting server&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="22" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;connected_count&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;connected_count&quot;&gt;%d connected&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="23" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;error_label&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;error_label&quot;&gt;Error&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="24" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;stopped_label&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;stopped_label&quot;&gt;Stopped&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="25" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;btn_start&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;btn_start&quot;&gt;Start&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="26" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;btn_stop&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;btn_stop&quot;&gt;Stop&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="27" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;unknown_track&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;unknown_track&quot;&gt;Unknown&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="28" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;cd_pip&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;cd_pip&quot;&gt;Picture-in-Picture&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="31" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;cd_fullscreen&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;cd_fullscreen&quot;&gt;Fullscreen&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="32" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;cd_exit_fullscreen&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;cd_exit_fullscreen&quot;&gt;Exit fullscreen&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="33" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;cd_cover_art&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;cd_cover_art&quot;&gt;Cover art&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="34" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;cd_play_pause&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;cd_play_pause&quot;&gt;Play/Pause&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="35" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;cd_rewind&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;cd_rewind&quot;&gt;Rewind&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="36" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;cd_fast_forward&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;cd_fast_forward&quot;&gt;Fast forward&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="37" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;cd_volume_down&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;cd_volume_down&quot;&gt;Volume down&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="38" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;cd_volume_up&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;cd_volume_up&quot;&gt;Volume up&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="39" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;cd_mute&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;cd_mute&quot;&gt;Mute&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="40" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;cd_download&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;cd_download&quot;&gt;Download video&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="41" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;cd_cancel_download&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;cd_cancel_download&quot;&gt;Cancel download&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="42" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;download_saved&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;download_saved&quot;&gt;Saved to %1$s&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="45" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;download_failed&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;download_failed&quot;&gt;Download failed&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="46" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;gesture_seek_seconds&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;gesture_seek_seconds&quot;&gt;%1$d seconds&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="49" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;seconds_short&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;seconds_short&quot;&gt;%1$ds&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="50" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;select_playback_speed&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;select_playback_speed&quot;&gt;Playback speed&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="51" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;cd_reset_speed&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;cd_reset_speed&quot;&gt;Reset speed&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="52" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;skip_silence&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;skip_silence&quot;&gt;Skip silence&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="53" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;cd_back&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;cd_back&quot;&gt;Back&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="56" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;cd_copy_url&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;cd_copy_url&quot;&gt;Copy video URL&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="57" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;cd_rotate&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;cd_rotate&quot;&gt;Rotate screen&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="58" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;cd_lock_controls&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;cd_lock_controls&quot;&gt;Lock controls&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="59" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;cd_unlock_controls&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;cd_unlock_controls&quot;&gt;Unlock controls&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="60" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;scale_best_fit&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;scale_best_fit&quot;&gt;Best fit&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="61" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;scale_stretch&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;scale_stretch&quot;&gt;Stretch&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="62" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;scale_crop&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;scale_crop&quot;&gt;Crop&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="63" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;scale_hundred_percent&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;scale_hundred_percent&quot;&gt;100%&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="64" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;dialog_pin_title&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;dialog_pin_title&quot;&gt;AirPlay PIN&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="67" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;btn_ok&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;btn_ok&quot;&gt;OK&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="68" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;btn_export&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;btn_export&quot;&gt;Export&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="71" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;btn_clear&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;btn_clear&quot;&gt;Clear&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="72" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;export_logs_chooser_title&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;export_logs_chooser_title&quot;&gt;Export logs&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="73" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;section_server&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;section_server&quot;&gt;Server&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="76" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;section_connection&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;section_connection&quot;&gt;Connection&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="77" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;section_display&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;section_display&quot;&gt;Display&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="78" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;section_decode&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;section_decode&quot;&gt;Decode&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="79" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;section_developer&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;section_developer&quot;&gt;Developer&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="80" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_server_name&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_server_name&quot;&gt;Server name&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="83" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_server_port&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_server_port&quot;&gt;Server port&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="84" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_auto_start&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_auto_start&quot;&gt;Start server automatically&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="85" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_auto_start_desc&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_auto_start_desc&quot;&gt;Start the AirPlay server when the app launches&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="86" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_boot_auto_start&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_boot_auto_start&quot;&gt;Start server at boot&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="87" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_boot_auto_start_desc&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_boot_auto_start_desc&quot;&gt;Start the AirPlay server when the device starts&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="88" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_run_in_background&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_run_in_background&quot;&gt;Run in background&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="89" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_run_in_background_desc&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_run_in_background_desc&quot;&gt;Keep the server running after leaving the app&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="90" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_require_pin&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_require_pin&quot;&gt;Require PIN (Beta)&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="93" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_require_pin_desc&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_require_pin_desc&quot;&gt;Require 4-digit PIN for each new connection&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="94" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_allow_new_conn&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_allow_new_conn&quot;&gt;Allow new connections&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="95" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_allow_new_conn_desc&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_allow_new_conn_desc&quot;&gt;Drop current client when a new one connects&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="96" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_idle_preview&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_idle_preview&quot;&gt;Idle screen preview&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="99" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_idle_preview_desc&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_idle_preview_desc&quot;&gt;Show video surface while waiting for a connection&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="100" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_auto_fullscreen&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_auto_fullscreen&quot;&gt;Enter fullscreen automatically&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="101" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_auto_fullscreen_desc&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_auto_fullscreen_desc&quot;&gt;Enter fullscreen when a client connects&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="102" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_keep_screen_on&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_keep_screen_on&quot;&gt;Keep screen on&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="103" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_keep_screen_on_desc&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_keep_screen_on_desc&quot;&gt;Prevent sleeping while a client is connected&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="104" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_advertise_video&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_advertise_video&quot;&gt;Advertise AirPlay video support&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="105" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_advertise_video_desc&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_advertise_video_desc&quot;&gt;When off, videos are cast as audio only streams&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="106" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_advertise_audio&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_advertise_audio&quot;&gt;Advertise AirPlay audio support&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="107" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_advertise_audio_desc&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_advertise_audio_desc&quot;&gt;When off, the device can only be used for mirroring and will be hidden from media players&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="108" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_alac&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_alac&quot;&gt;Advertise ALAC codec&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="109" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_alac_desc&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_alac_desc&quot;&gt;Offer ALAC in the mDNS record; used for music streaming&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="110" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_aac&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_aac&quot;&gt;Advertise AAC codec&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="111" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_aac_desc&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_aac_desc&quot;&gt;Offer AAC-ELD/AAC-LC in the mDNS record; used for screen mirroring audio&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="112" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_launch_on_connect&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_launch_on_connect&quot;&gt;Open this application on connect&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="113" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_launch_on_connect_desc&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_launch_on_connect_desc&quot;&gt;Show the screen when a client connects&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="114" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_launch_on_connect_no_permission&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_launch_on_connect_no_permission&quot;&gt;Tap to grant Display over other apps permission&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="115" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_resolution&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_resolution&quot;&gt;Resolution&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="116" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_resolution_desc&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_resolution_desc&quot;&gt;Video resolution advertised to clients&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="117" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_resolution_placeholder&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_resolution_placeholder&quot;&gt;[W]x[H]&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="118" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_resolution_width&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_resolution_width&quot;&gt;Width&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="119" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_resolution_height&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_resolution_height&quot;&gt;Height&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="120" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_max_fps&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_max_fps&quot;&gt;Maximum FPS&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="121" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_max_fps_desc&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_max_fps_desc&quot;&gt;Maximum frame rate advertised to clients&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="122" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_max_fps_placeholder&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_max_fps_placeholder&quot;&gt;FPS&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="123" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_overscanned&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_overscanned&quot;&gt;Overscanned&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="124" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_overscanned_desc&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_overscanned_desc&quot;&gt;Add pixel boundary for full-screen overscan displays&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="125" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;chip_custom&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;chip_custom&quot;&gt;Custom&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="126" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;chip_device_portrait&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;chip_device_portrait&quot;&gt;Portrait&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="127" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;chip_device_landscape&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;chip_device_landscape&quot;&gt;Landscape&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="128" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_h265&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_h265&quot;&gt;H.265 (HEVC)&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="131" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_h265_desc&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_h265_desc&quot;&gt;Enable H.265 video decoding if device supports it&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="132" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_enforce_sdr&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_enforce_sdr&quot;&gt;MediaFormat.KEY_COLOR_TRANSFER&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="133" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_enforce_sdr_desc&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_enforce_sdr_desc&quot;&gt;Tag video as limited SDR; disable to allow HDR sources to pass through&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="134" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_sw_alac&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_sw_alac&quot;&gt;Force software ALAC decoder&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="135" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_sw_alac_desc&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_sw_alac_desc&quot;&gt;Always use software ALAC decoder instead of hardware decoder, may affect audio latency&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="136" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_developer_options&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_developer_options&quot;&gt;Developer options&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="139" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_developer_options_desc&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_developer_options_desc&quot;&gt;Show options for advanced users&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="140" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_key_allow_frame_drop&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_key_allow_frame_drop&quot;&gt;MediaFormat.KEY_ALLOW_FRAME_DROP&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="141" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_key_allow_frame_drop_desc&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_key_allow_frame_drop_desc&quot;&gt;Allow video decoders to drop frames internally to keep up on Android 10+&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="142" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_realtime_decoder_priority&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_realtime_decoder_priority&quot;&gt;MediaFormat.KEY_PRIORITY&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="143" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_realtime_decoder_priority_desc&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_realtime_decoder_priority_desc&quot;&gt;Request real-time scheduling for audio decoder&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="144" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_operating_rate&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_operating_rate&quot;&gt;MediaFormat.KEY_OPERATING_RATE&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="145" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_operating_rate_desc&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_operating_rate_desc&quot;&gt;Request maximum operating rate from decoder&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="146" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;chip_auto&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;chip_auto&quot;&gt;Auto&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="147" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;chip_on&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;chip_on&quot;&gt;On&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="148" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;chip_off&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;chip_off&quot;&gt;Off&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="149" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_low_latency&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_low_latency&quot;&gt;Low latency&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="150" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_low_latency_desc&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_low_latency_desc&quot;&gt;Use low-latency audio decoding for output; this uses more power and CPU&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="151" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_scheduled_output_buffer_release&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_scheduled_output_buffer_release&quot;&gt;Aligned frame pacing&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="152" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_scheduled_output_buffer_release_desc&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_scheduled_output_buffer_release_desc&quot;&gt;Schedule each decoded frame to the VSYNC matching its presentation timestamp&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="153" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_audio_delay&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_audio_delay&quot;&gt;Override audio delay&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="154" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_audio_delay_desc&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_audio_delay_desc&quot;&gt;Set a custom audio latency reported to client&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="155" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;audio_delay_value&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;audio_delay_value&quot;&gt;%dms&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="156" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_audio_auto_buffer&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_audio_auto_buffer&quot;&gt;Automatic software audio buffer size&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="157" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_audio_auto_buffer_desc&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_audio_auto_buffer_desc&quot;&gt;Adaptively tune the software audio buffer according to network conditions and device performance; slider adjusts how much jitter the buffer can absorb&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="158" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;audio_adaptive_value&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;audio_adaptive_value&quot;&gt;%1$d%% (%2$s)&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="159" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_audio_cushion_ms&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_audio_cushion_ms&quot;&gt;Software audio buffer (ms)&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="167" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_audio_cushion_ms_desc&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_audio_cushion_ms_desc&quot;&gt;Buffer to absorb network and decoder jitter: shorter duration means lower latency; longer duration means fewer glitches&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="168" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_oboe_buffer_frames&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_oboe_buffer_frames&quot;&gt;Hardware output buffer (frames)&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="169" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_oboe_buffer_frames_desc&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_oboe_buffer_frames_desc&quot;&gt;Stream buffer between this app and the audio device to absorb CPU scheduling jitter only. Keep at 0 for automatic sizing.&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="170" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_debug_overlay&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_debug_overlay&quot;&gt;Show debug overlay&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="171" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_debug_overlay_desc&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_debug_overlay_desc&quot;&gt;Overlay stream stats on video: codec, FPS, bitrate, jitter, frames, drops&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="172" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_benchmark_log&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_benchmark_log&quot;&gt;Enable debug logging&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="173" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;setting_benchmark_log_desc&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;setting_benchmark_log_desc&quot;&gt;Log stream stats to logcat: codec, FPS, bitrate, jitter, frames, drops&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="174" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;debug_section_video&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;debug_section_video&quot;&gt;Video&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="177" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;debug_section_audio&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;debug_section_audio&quot;&gt;Audio&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="178" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;debug_section_network&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;debug_section_network&quot;&gt;Network&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="179" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;debug_video&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;debug_video&quot;&gt;%1$s %2$s&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="180" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;debug_fps_bitrate&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;debug_fps_bitrate&quot;&gt;FPS: %1$d  Bitrate: %2$s&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="181" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;debug_frames_drops&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;debug_frames_drops&quot;&gt;Frames: %1$d  Drops: %2$d&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="182" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;debug_jitter&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;debug_jitter&quot;&gt;Jitter: %1$s&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="183" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;debug_audio&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;debug_audio&quot;&gt;%1$s  Vol: %2$d%%&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="184" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;debug_audio_buffer&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;debug_audio_buffer&quot;&gt;Buffer: %1$d ms (tgt: %2$d ms)&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="185" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;debug_audio_glitch&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;debug_audio_glitch&quot;&gt;Glitch: trim=%1$d drop=%2$d sil=%3$d ur=%4$d xrun=%5$d&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="186" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;debug_audio_decode&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;debug_audio_decode&quot;&gt;Decode: %1$s&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="187" column="13" />
+  </issue>
+  <issue id="MissingTranslation" message="&quot;debug_clients&quot; is not translated in &quot;ru&quot; (Russian)" errorLine1="    &lt;string name=&quot;debug_clients&quot;&gt;Clients: %1$d&lt;/string&gt;" errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+    <location file="src/main/res/values/strings.xml" line="188" column="13" />
+  </issue>
+</issues>

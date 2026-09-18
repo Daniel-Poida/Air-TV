@@ -1,0 +1,1 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="dev.airtv.tests"><uses-sdk android:minSdkVersion="24" android:targetSdkVersion="36"/><application android:label="Air TV recovery test"/><instrumentation android:name="dev.airtv.tests.RecoveryTest" android:targetPackage="dev.airtv.receiver" android:functionalTest="true"/></manifest>
