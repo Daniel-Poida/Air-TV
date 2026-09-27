@@ -1,11 +1,17 @@
 package io.github.jqssun.airplay.files
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.provider.Settings
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -30,6 +36,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
 import io.github.jqssun.airplay.MainActivity
@@ -39,6 +46,7 @@ import io.github.jqssun.airplay.ui.dpadFocus
 import io.github.jqssun.airplay.ui.requestFocusUntilLanded
 import io.github.jqssun.airplay.ui.theme.AirPlayTheme
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.io.IOException
 import java.util.Locale
 
@@ -57,6 +65,8 @@ class FilesActivity : ComponentActivity() {
     private var deleting by mutableStateOf<FileStore.Entry?>(null)
     private var textPreview by mutableStateOf<Pair<String,String>?>(null)
     private var imagePreview by mutableStateOf<Pair<String,Bitmap>?>(null)
+    private var installing by mutableStateOf<FileStore.Entry?>(null)
+    private var vpnActive by mutableStateOf(false)
     private val poll = object : Runnable { override fun run() { if (visible) { refresh(); main.postDelayed(this,3000) } } }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,6 +85,7 @@ class FilesActivity : ComponentActivity() {
     fun refresh() {
         if (!visible || isFinishing) return
         val receiver=FilesReceiver.current();running=receiver!=null;status=receiver?.status()?:"Приём выключен";pending=receiver?.pending();transfer=receiver?.progress()
+        vpnActive=vpnCaptured()
         if(receiver!=null && receiver.url()!=qrAddress) try {
             val address=receiver.url();val matrix=QRCodeWriter().encode(address,BarcodeFormat.QR_CODE,384,384)
             val pixels=IntArray(384*384) { index-> if(matrix[index%384,index/384]) android.graphics.Color.BLACK else android.graphics.Color.WHITE }
@@ -103,6 +114,11 @@ class FilesActivity : ComponentActivity() {
                     Spacer(Modifier.height(12.dp))
                     Text("Сканируй QR камерой телефона\nили открой адрес в браузере на Mac.",fontSize=15.sp,lineHeight=23.sp,color=MaterialTheme.colorScheme.onSurfaceVariant)
                     Spacer(Modifier.height(12.dp));Text(status,fontSize=16.sp,lineHeight=22.sp,color=MaterialTheme.colorScheme.primary)
+                    if(vpnActive){
+                        Spacer(Modifier.height(12.dp))
+                        Text("На телевизоре включён VPN. Браузер из локальной сети может не открыть эту страницу: исключите Air TV из туннеля или выключите VPN на время передачи.",
+                            fontSize=13.sp,lineHeight=19.sp,color=MaterialTheme.colorScheme.error)
+                    }
                 }
                 qr?.let { Image(it.asImageBitmap(),"QR-код адреса передачи файлов",Modifier.size(176.dp).background(Color.White).padding(8.dp)) }
             }
@@ -137,7 +153,9 @@ class FilesActivity : ComponentActivity() {
                         FilledTonalButton(onClick={open(entry)},modifier=Modifier.weight(1f).dpadFocus(),shape=RoundedCornerShape(12.dp),contentPadding=PaddingValues(14.dp)) {
                             Column(Modifier.fillMaxWidth()) {
                                 Text(entry.name,maxLines=2,overflow=TextOverflow.Ellipsis)
-                                Text(String.format(Locale.ROOT,"%.1f МБ · %s",entry.size/1048576.0,entry.location),fontSize=12.sp,color=MaterialTheme.colorScheme.onSurfaceVariant)
+                                Text(String.format(Locale.ROOT,"%.1f МБ · %s",entry.size/1048576.0,entry.location)+
+                                    (if(entry.name.lowercase(Locale.ROOT).endsWith(".apk")) " · приложение, откроет установщик" else ""),
+                                    fontSize=12.sp,color=MaterialTheme.colorScheme.onSurfaceVariant)
                             }
                         }
                         OutlinedButton(onClick={deleting=entry},modifier=Modifier.dpadFocus(),shape=RoundedCornerShape(12.dp),contentPadding=PaddingValues(horizontal=22.dp,vertical=14.dp)) {Text("Удалить")}
@@ -163,6 +181,13 @@ class FilesActivity : ComponentActivity() {
                 confirmButton={TextButton(onClick={deleting=null;Thread({try {FileStore.get(this).delete(entry);main.post {signature="#refresh";refresh()} }catch(error:IOException){error("Не удалось удалить файл.")}},"AirTV-file-delete").start()},modifier=Modifier.dpadFocus()){Text("Удалить")}},
                 dismissButton={TextButton(onClick={deleting=null},modifier=Modifier.dpadFocus()){Text("Отмена")}})
         }
+        installing?.let { entry->
+            val cancelFocus=remember(entry){FocusRequester()};LaunchedEffect(entry){cancelFocus.requestFocusUntilLanded()}
+            AlertDialog(onDismissRequest={installing=null},title={Text("Установить приложение?")},
+                text={Text("${entry.name}\n${bytes(entry.size)}\n\nОткроется системный установщик Android. Устанавливайте только то, что получили из источника, которому доверяете.")},
+                confirmButton={TextButton(onClick={val target=entry;installing=null;install(target)},modifier=Modifier.dpadFocus()){Text("Установить")}},
+                dismissButton={TextButton(onClick={installing=null},modifier=Modifier.focusRequester(cancelFocus).dpadFocus()){Text("Отмена")}})
+        }
         textPreview?.let { (name,value)-> AlertDialog(onDismissRequest={textPreview=null},title={Text(name)},text={Text(value)},confirmButton={TextButton(onClick={textPreview=null},modifier=Modifier.dpadFocus()){Text("Закрыть")}}) }
         imagePreview?.let { (name,image)-> AlertDialog(onDismissRequest={closeImage()},title={Text(name)},text={Image(image.asImageBitmap(),name)},confirmButton={TextButton(onClick={closeImage()},modifier=Modifier.dpadFocus()){Text("Закрыть")}}) }
     }
@@ -170,9 +195,34 @@ class FilesActivity : ComponentActivity() {
     private fun duration(seconds:Long):String = if(seconds>=60) "${seconds/60} мин ${seconds%60} с" else "$seconds с"
     private fun closeImage() { imagePreview=null }
     private fun error(value:String) {main.post {if(visible)textPreview="Air TV" to value} }
+    /** Трафик приложения уходит в VPN-туннель: страница приёма из локальной сети тогда недоступна. */
+    private fun vpnCaptured():Boolean = try {
+        val manager=getSystemService(ConnectivityManager::class.java)
+        manager?.getNetworkCapabilities(manager.activeNetwork)?.hasTransport(NetworkCapabilities.TRANSPORT_VPN)==true
+    } catch(failure:Exception) { false }
+    /** Системному установщику нужна content-ссылка: приватные файлы отдаём через FileProvider. */
+    private fun installUri(entry:FileStore.Entry):Uri {
+        val uri=Uri.parse(entry.id)
+        if("file"!=uri.scheme) return uri
+        val path=uri.path?:throw IOException("Invalid file")
+        return FileProvider.getUriForFile(this,"$packageName.fileprovider",File(path))
+    }
+    private fun install(entry:FileStore.Entry) {
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O && !packageManager.canRequestPackageInstalls()) {
+            try { startActivity(Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,Uri.parse("package:$packageName"))) }
+            catch(missing:ActivityNotFoundException) { error("Разрешите установку из Air TV в настройках Android: «Приложения» → «Специальный доступ» → «Установка неизвестных приложений».") }
+            return
+        }
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW).setDataAndType(installUri(entry),"application/vnd.android.package-archive")
+                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK))
+        } catch(missing:ActivityNotFoundException) { error("На телевизоре нет системного установщика приложений.") }
+        catch(failure:Exception) { error("Не удалось открыть установщик: ${failure.message}") }
+    }
     private fun open(entry:FileStore.Entry) {
         val name=entry.name.lowercase(Locale.ROOT)
         if(name.matches(Regex(".*\\.(mp4|m4v|mkv|webm|mov|mpeg|mpg|avi|mp3|m4a|aac|wav|ogg)$"))){startActivity(Intent(this,PlaybackActivity::class.java).putExtra("entry_id",entry.id));return}
+        if(name.endsWith(".apk")){main.post {if(visible)installing=entry};return}
         Thread({try {
             val store=FileStore.get(this)
             if(name.matches(Regex(".*\\.(txt|md|log)$"))&&entry.size<=65536){

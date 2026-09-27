@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
     <cache-path name="cache" path="." />
+    <!-- Принятые файлы во внутренней памяти приложения: отсюда системный
+         установщик читает APK по content-ссылке с временным доступом. -->
+    <files-path name="received" path="received/" />
+    <!-- То же для загрузок на Android 9 и старше, где они лежат файлами. -->
+    <external-path name="airtv-downloads" path="Download/AirTV/" />
 </paths>
