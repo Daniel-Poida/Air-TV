@@ -66,7 +66,7 @@ public final class FilesReceiver implements Closeable {
     FileStore store() { return storage; }
     private void initialize() {
         try {
-            BrowserReceiver web=new BrowserReceiver(storage=FileStore.get(app),()->prefs.getBoolean(Prefs.SAVE_DOWNLOADS,false),this::approve,this::received,this::progressChanged);
+            BrowserReceiver web=new BrowserReceiver(storage=FileStore.get(app),()->prefs.getBoolean(Prefs.SAVE_DOWNLOADS,false),this::approve,this::received,this::progressChanged,this::clipboard);
             synchronized(this) { if(closed) { web.close(); return; } web.setRequirePin(prefs.getBoolean(Prefs.REQUIRE_PIN,Prefs.DEF_REQUIRE_PIN)); browser=web; web.start(); }
             message=""; notifyUi();
         } catch(Exception error) { message="Не удалось запустить браузерный приёмник. Порт 8786 может быть занят."; Log.e(TAG,"Browser startup failed",error); notifyUi(); }
@@ -83,6 +83,18 @@ public final class FilesReceiver implements Closeable {
         notifyUi();
     }
     private void received(File directory) { message="Передача завершена. Выбери файл ниже."; notifyUi(); }
+    /**
+     * Кладёт текст из браузера в буфер обмена телевизора. С Android 10 это вправе делать
+     * только приложение на переднем плане, поэтому без открытого экрана Air TV возвращаем
+     * false — пусть браузер честно скажет, что нужно открыть экран, вместо тихой неудачи.
+     */
+    private boolean clipboard(String value) {
+        FilesActivity screen; synchronized(FilesReceiver.class) { screen=activity.get(); }
+        if(closed || screen==null) return false;
+        CompletableFuture<Boolean> done=new CompletableFuture<>();
+        main.post(()->{ try { done.complete(screen.copyToClipboard(value)); } catch(Exception error) { Log.w(TAG,"Clipboard write failed",error); done.complete(false); } });
+        try { return done.get(5,TimeUnit.SECONDS); } catch(Exception error) { return false; }
+    }
     private boolean approve(String sender,Map<String,Boolean> files) throws Exception {
         Pending request=new Pending(sender,files);
         synchronized(this) { if(closed || pending!=null) return false; pending=request; }

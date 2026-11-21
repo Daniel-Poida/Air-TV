@@ -13,6 +13,8 @@ final class BrowserReceiver implements Closeable {
     interface Approval { boolean accept(String sender, Map<String,Boolean> files) throws Exception; }
     interface Received { void complete(File directory); }
     interface Progress { void changed(TransferProgress state); }
+    /** Текст из браузера. Возвращает false, если экран Air TV не открыт и класть в буфер некому. */
+    interface Text { boolean deliver(String value); }
     private final ServerSocket server;
     private final File root;
     private final FileStore storage;
@@ -20,6 +22,7 @@ final class BrowserReceiver implements Closeable {
     private final Approval approval;
     private final Received received;
     private final Progress progress;
+    private final Text text;
     private volatile TransferProgress state;
     TransferProgress progress() { return state; }
     private void publish(TransferProgress value) { state=value;progress.changed(value); }
@@ -45,8 +48,8 @@ final class BrowserReceiver implements Closeable {
         volatile Socket uploadSocket;
         long expires=System.currentTimeMillis()+300000;
     }
-    BrowserReceiver(FileStore storage,java.util.function.BooleanSupplier downloads,Approval approval,Received received,Progress progress) throws IOException {
-        this.storage=storage;this.downloads=downloads;this.root=storage.root;this.approval=approval;this.received=received;this.progress=progress;
+    BrowserReceiver(FileStore storage,java.util.function.BooleanSupplier downloads,Approval approval,Received received,Progress progress,Text text) throws IOException {
+        this.storage=storage;this.downloads=downloads;this.root=storage.root;this.approval=approval;this.received=received;this.progress=progress;this.text=text;
         File root=this.root;
         if(!root.isDirectory() && !root.mkdirs()) throw new IOException("Storage unavailable");
         token=String.format(Locale.ROOT,"%04d",new SecureRandom().nextInt(10000));
@@ -121,6 +124,18 @@ final class BrowserReceiver implements Closeable {
             String lengthText=headers.get("content-length");
             if(lengthText==null || !lengthText.matches("[0-9]{1,19}")) throw new IOException("Missing length");
             long length=Long.parseLong(lengthText);
+            // Текст кладётся в буфер обмена телевизора. Писать в буфер вправе только
+            // приложение на переднем плане, поэтому экран Air TV должен быть открыт.
+            if(request[0].equals("POST") && request[1].equals("/text")) {
+                if(length<1 || length>8192) throw new IOException("Text too large");
+                byte[] body=new byte[(int)length]; new DataInputStream(input).readFully(body);
+                String value=new JSONObject(new String(body,StandardCharsets.UTF_8)).getString("text");
+                if(value.isEmpty()) { response(output,400,"application/json",json("{\"error\":\"Пустой текст\"}")); return; }
+                if(value.length()>4096) { response(output,413,"application/json",json("{\"error\":\"Слишком длинный текст: не больше 4096 символов\"}")); return; }
+                if(text.deliver(value)) response(output,200,"application/json",json("{\"ok\":true}"));
+                else response(output,409,"application/json",json("{\"error\":\"Откройте на телевизоре экран AirDrop — без него положить текст в буфер нельзя\"}"));
+                return;
+            }
             if(request[0].equals("POST") && request[1].equals("/offer")) {
                 if(length<1 || length>32768) throw new IOException("Offer too large");
                 byte[] body=new byte[(int)length]; new DataInputStream(input).readFully(body);
@@ -218,11 +233,16 @@ final class BrowserReceiver implements Closeable {
     }
     private static final String PAGE="<!doctype html><html lang='ru'><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Air TV · AirDrop</title>"+
         "<style>*{box-sizing:border-box}body{margin:0;background:#0c1216;color:#ecf3f1;font:16px system-ui;min-height:100vh;display:grid;place-items:center}main{width:min(560px,calc(100% - 40px));padding:48px 0}h1{color:#9aefcf;font-size:36px;letter-spacing:-1px;margin:0 0 12px}p{color:#aabbb8;line-height:1.6}.drop{border:1px dashed #59716b;border-radius:20px;padding:40px 24px;text-align:center;margin:28px 0 16px;cursor:pointer}.drop.over{background:#19332a;border-color:#9aefcf}button{background:#9aefcf;color:#12211b;border:0;border-radius:12px;padding:14px 24px;font:600 16px system-ui;cursor:pointer}button:disabled{opacity:.4;cursor:default}ul{padding-left:20px;overflow-wrap:anywhere}progress{width:100%;accent-color:#9aefcf;margin:20px 0 8px}#status{min-height:48px}.small{font-size:13px;color:#849a93}#pick{display:none}#code{background:#17231f;border:1px solid #59716b;border-radius:10px;padding:12px;color:#ecf3f1;font:18px ui-monospace;width:100%;margin:8px 0}label{color:#aabbb8}</style>"+
-        "<main><h1>Air TV</h1><p>Передай файлы на телевизор.<br>Mac и телевизор должны быть в одной сети.</p><label id='codeLabel' for='code'>PIN на экране телевизора</label><input id='code' placeholder='1234' inputmode='numeric' autocomplete='off' maxlength='4'><div class='drop' id='drop' role='button' tabindex='0'>Перетащи файлы сюда<br><span class='small'>или нажми, чтобы выбрать</span></div><input id='pick' type='file' multiple><ul id='list'></ul><button id='send' disabled>Отправить на телевизор</button><progress id='progress' max='100' value='0'></progress><p id='status' aria-live='polite'></p><p class='small'>Сохранять: __STORAGE__</p><p class='small'>Подтверди приём на телевизоре.<br>Это загрузка через локальную сеть. AirDrop в Finder пока не поддерживается. Соединение HTTP не шифруется.</p></main>"+
+        "<main><h1>Air TV</h1><p>Передай файлы на телевизор.<br>Mac и телевизор должны быть в одной сети.</p><label id='codeLabel' for='code'>PIN на экране телевизора</label><input id='code' placeholder='1234' inputmode='numeric' autocomplete='off' maxlength='4'><div class='drop' id='drop' role='button' tabindex='0'>Перетащи файлы сюда<br><span class='small'>или нажми, чтобы выбрать</span></div><input id='pick' type='file' multiple><ul id='list'></ul><button id='send' disabled>Отправить на телевизор</button><progress id='progress' max='100' value='0'></progress><p id='status' aria-live='polite'></p><p class='small'>Сохранять: __STORAGE__</p><hr><label for='clip'>Текст в буфер обмена телевизора</label><textarea id='clip' rows='3' placeholder='Вставь сюда ключ, ссылку или пароль' autocomplete='off'></textarea><button id='sendText'>Положить в буфер телевизора</button><p id='clipStatus' class='small' aria-live='polite'></p><p class='small'>Экран AirDrop на телевизоре должен быть открыт: класть в буфер вправе только приложение на переднем плане.</p><p class='small'>Подтверди приём на телевизоре.<br>Это загрузка через локальную сеть. AirDrop в Finder пока не поддерживается. Соединение HTTP не шифруется.</p></main>"+
         "<script>const requirePin=__PIN_REQUIRED__;let token=location.hash.slice(1);const code=document.getElementById('code');code.value=token;if(!requirePin){code.hidden=true;document.getElementById('codeLabel').hidden=true}const pick=document.getElementById('pick'),drop=document.getElementById('drop'),send=document.getElementById('send'),list=document.getElementById('list'),status=document.getElementById('status'),progress=document.getElementById('progress');let files=[],busy=false;history.replaceState(null,'',location.pathname);"+
         "function choose(selected){if(busy)return;token=code.value.replace(/[-\\s]/g,'').toLowerCase();files=Array.from(selected);list.replaceChildren();for(const f of files){const li=document.createElement('li');li.textContent=f.name+' · '+(f.size/1048576).toFixed(1)+' МБ';list.append(li)}const total=files.reduce((n,f)=>n+f.size,0);send.disabled=(requirePin&&!/^[0-9]{4}$/.test(token))||!files.length||files.length>128;status.textContent=send.disabled?'Выбери до 128 файлов.':'Готово к отправке';progress.value=0}"+
         "code.oninput=()=>choose(files);drop.onclick=()=>{if(!busy)pick.click()};drop.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();drop.click()}};pick.onchange=()=>choose(pick.files);drop.ondragover=e=>{e.preventDefault();drop.classList.add('over')};drop.ondragleave=()=>drop.classList.remove('over');drop.ondrop=e=>{e.preventDefault();drop.classList.remove('over');choose(e.dataTransfer.files)};"+
         "async function api(path,body){const r=await fetch(path,{method:'POST',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},body:body===undefined?'':JSON.stringify(body)});const result=await r.json();if(!r.ok)throw Error(result.error||'Телевизор отклонил запрос');return result}"+
         "function upload(id,i,file,done,total){return new Promise((resolve,reject)=>{const x=new XMLHttpRequest();x.open('PUT','/upload/'+id+'/'+i);x.setRequestHeader('Authorization','Bearer '+token);x.timeout=0;x.upload.onprogress=e=>{progress.value=total?100*(done+e.loaded)/total:100};x.onload=()=>x.status===200?resolve():reject(Error('Файл не принят телевизором'));x.onerror=()=>reject(Error('Связь с телевизором прервалась'));x.ontimeout=()=>reject(Error('Истекло время загрузки'));x.send(file)})}"+
-        "send.onclick=async()=>{busy=true;code.disabled=true;send.disabled=true;let id;try{status.textContent='Подтверди приём на телевизоре…';const offer=await api('/offer',{files:files.map(f=>({name:f.name,size:f.size}))});id=offer.id;let done=0,total=files.reduce((n,f)=>n+f.size,0);for(let i=0;i<files.length;i++){status.textContent='Отправляем '+files[i].name;await upload(id,i,files[i],done,total);done+=files[i].size}await api('/finish/'+id);id=null;progress.value=100;status.textContent='Готово. Файлы сохранены на телевизоре.'}catch(e){status.textContent=e.message;if(id)try{await api('/cancel/'+id)}catch(_){} }finally{busy=false;code.disabled=false;send.disabled=false}};status.textContent=requirePin?'Введи PIN с экрана телевизора и выбери файлы.':'Выбери файлы. PIN отключён в настройках телевизора.';</script></html>";
+        "send.onclick=async()=>{busy=true;code.disabled=true;send.disabled=true;let id;try{status.textContent='Подтверди приём на телевизоре…';const offer=await api('/offer',{files:files.map(f=>({name:f.name,size:f.size}))});id=offer.id;let done=0,total=files.reduce((n,f)=>n+f.size,0);for(let i=0;i<files.length;i++){status.textContent='Отправляем '+files[i].name;await upload(id,i,files[i],done,total);done+=files[i].size}await api('/finish/'+id);id=null;progress.value=100;status.textContent='Готово. Файлы сохранены на телевизоре.'}catch(e){status.textContent=e.message;if(id)try{await api('/cancel/'+id)}catch(_){} }finally{busy=false;code.disabled=false;send.disabled=false}};status.textContent=requirePin?'Введи PIN с экрана телевизора и выбери файлы.':'Выбери файлы. PIN отключён в настройках телевизора.';"+
+        "const clip=document.getElementById('clip'),sendText=document.getElementById('sendText'),clipStatus=document.getElementById('clipStatus');"+
+        "sendText.onclick=async()=>{const value=clip.value;if(!value){clipStatus.textContent='Нечего отправлять.';return}"+
+        "token=code.value.replace(/[-\\s]/g,'').toLowerCase();sendText.disabled=true;clipStatus.textContent='Отправляем…';"+
+        "try{await api('/text',{text:value});clipStatus.textContent='Готово. Текст в буфере телевизора — вставьте его в нужном приложении.'}"+
+        "catch(e){clipStatus.textContent=e.message}finally{sendText.disabled=false}};</script></html>";
 }

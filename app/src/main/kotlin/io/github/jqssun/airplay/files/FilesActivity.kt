@@ -1,6 +1,8 @@
 package io.github.jqssun.airplay.files
 
 import android.content.ActivityNotFoundException
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -67,6 +69,7 @@ class FilesActivity : ComponentActivity() {
     private var imagePreview by mutableStateOf<Pair<String,Bitmap>?>(null)
     private var installing by mutableStateOf<FileStore.Entry?>(null)
     private var vpnActive by mutableStateOf(false)
+    private var clipboardNote by mutableStateOf("")
     private val poll = object : Runnable { override fun run() { if (visible) { refresh(); main.postDelayed(this,3000) } } }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -118,6 +121,10 @@ class FilesActivity : ComponentActivity() {
                         Spacer(Modifier.height(12.dp))
                         Text("На телевизоре включён VPN. Браузер из локальной сети может не открыть эту страницу: исключите Air TV из туннеля или выключите VPN на время передачи.",
                             fontSize=13.sp,lineHeight=19.sp,color=MaterialTheme.colorScheme.error)
+                    }
+                    if(clipboardNote.isNotEmpty()){
+                        Spacer(Modifier.height(12.dp))
+                        Text(clipboardNote,fontSize=14.sp,lineHeight=20.sp,color=MaterialTheme.colorScheme.primary)
                     }
                 }
                 qr?.let { Image(it.asImageBitmap(),"QR-код адреса передачи файлов",Modifier.size(176.dp).background(Color.White).padding(8.dp)) }
@@ -195,6 +202,21 @@ class FilesActivity : ComponentActivity() {
     private fun duration(seconds:Long):String = if(seconds>=60) "${seconds/60} мин ${seconds%60} с" else "$seconds с"
     private fun closeImage() { imagePreview=null }
     private fun error(value:String) {main.post {if(visible)textPreview="Air TV" to value} }
+    /**
+     * Кладёт текст из браузера в буфер обмена. Вызывается в потоке интерфейса, пока экран
+     * открыт: с Android 10 писать в буфер вправе только приложение на переднем плане.
+     * Сам текст на экране не показываем — там может быть ключ или пароль.
+     */
+    fun copyToClipboard(value: String): Boolean {
+        val manager=getSystemService(ClipboardManager::class.java)?:return false
+        return try {
+            manager.setPrimaryClip(ClipData.newPlainText("Air TV",value))
+            clipboardNote="В буфер положено ${value.length} символов. Откройте нужное приложение и вставьте."
+            main.removeCallbacks(clearClipboardNote);main.postDelayed(clearClipboardNote,20000)
+            true
+        } catch(failure:Exception) { android.util.Log.w("AirTVFiles","Clipboard write refused",failure);false }
+    }
+    private val clearClipboardNote=Runnable { clipboardNote="" }
     /** Трафик приложения уходит в VPN-туннель: страница приёма из локальной сети тогда недоступна. */
     private fun vpnCaptured():Boolean = try {
         val manager=getSystemService(ConnectivityManager::class.java)
