@@ -208,9 +208,16 @@ class FilesActivity : ComponentActivity() {
      * Сам текст на экране не показываем — там может быть ключ или пароль.
      */
     fun copyToClipboard(value: String): Boolean {
+        // Экран должен быть именно на переднем плане. Привязанной активности мало:
+        // она жива и в фоне, а запись из фона Android 10 молча игнорирует.
+        if(!visible) return false
         val manager=getSystemService(ClipboardManager::class.java)?:return false
         return try {
             manager.setPrimaryClip(ClipData.newPlainText("Air TV",value))
+            // Перечитываем: отказ приходит не исключением, а тишиной, и без проверки
+            // браузер отрапортовал бы об успехе там, где в буфер ничего не легло.
+            val stored=manager.primaryClip?.takeIf { it.itemCount>0 }?.getItemAt(0)?.text?.toString()
+            if(stored!=value) { android.util.Log.w("AirTVFiles","Clipboard write ignored by system");return false }
             clipboardNote="В буфер положено ${value.length} символов. Откройте нужное приложение и вставьте."
             main.removeCallbacks(clearClipboardNote);main.postDelayed(clearClipboardNote,20000)
             true
